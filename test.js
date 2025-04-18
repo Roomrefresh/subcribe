@@ -3,19 +3,30 @@
     var overlay = document.createElement("div");
     overlay.id = "popupOverlay";
     overlay.style.cssText = "display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9998;";
-    
+
     var box = document.createElement("div");
     box.id = "popupBox";
     box.style.cssText = "display:none; position:fixed; top:30%; left:50%; transform:translate(-50%, -50%); background:#fff; border-radius:15px; padding:40px; z-index:9999; box-shadow:0 0 20px rgba(0,0,0,0.4); width:90%; max-width:450px; text-align:center;";
 
-    box.innerHTML = `
-      <p style="margin:0; font-size:22px; line-height:1.5;">
-        🎉 Please, Renew Subscriptions!<br>
-        <strong>Nawalpur Samaj South Korea</strong>
-      </p>
-      <button id="closePopupBtn" style="margin-top:20px; padding:10px 25px; font-size:16px; border-radius:5px;">Close</button>
-      <button id="subscribeBtn" style="margin-top:20px; padding:10px 25px; font-size:16px; background-color:green; color:white; border:none; border-radius:5px;">Subscription</button>
-    `;
+    // content elements
+    var p = document.createElement("p");
+    p.style.cssText = "margin:0; font-size:22px; line-height:1.5;";
+    p.innerHTML = '🎉 Please, Renew Subscriptions!<br><strong>Nawalpur Samaj South Korea</strong>';
+
+    var closeBtn = document.createElement("button");
+    closeBtn.id = "closePopupBtn";
+    closeBtn.textContent = "Close";
+    closeBtn.style.cssText = "margin-top:20px; padding:10px 25px; font-size:16px; border-radius:5px;";
+
+    var subBtn = document.createElement("button");
+    subBtn.id = "subscribeBtn";
+    subBtn.textContent = "Subscription";
+    subBtn.style.cssText = "margin-top:20px; padding:10px 25px; font-size:16px; background-color:green; color:white; border:none; border-radius:5px;";
+
+    // append to box
+    box.appendChild(p);
+    box.appendChild(closeBtn);
+    box.appendChild(subBtn);
 
     document.body.appendChild(overlay);
     document.body.appendChild(box);
@@ -48,7 +59,7 @@
         });
       } else if (tryCount < maxTries) {
         tryCount++;
-        setTimeout(attachHandlers, 100); // retry after 100ms
+        setTimeout(attachHandlers, 100);
       }
     }
 
@@ -57,6 +68,6 @@
 
   document.addEventListener("DOMContentLoaded", function () {
     injectPopupHTML();
-    setTimeout(setupPopupLogic, 100); // popup load भइसकेपछि logic जोडिन्छ
+    setTimeout(setupPopupLogic, 100);
   });
 })();
