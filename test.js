@@ -6,7 +6,7 @@
     
     var box = document.createElement("div");
     box.id = "popupBox";
-    box.style.cssText = "display:none; position:fixed; top:30%; left:50%; transform:translate(-50%, -50%); background:#fff; border-radius:15px; padding:40px; z-index:9999; box-shadow:0 0 20px rgba(0,0,0,0.4); width:450px; text-align:center;";
+    box.style.cssText = "display:none; position:fixed; top:30%; left:50%; transform:translate(-50%, -50%); background:#fff; border-radius:15px; padding:40px; z-index:9999; box-shadow:0 0 20px rgba(0,0,0,0.4); width:90%; max-width:450px; text-align:center;";
 
     box.innerHTML = `
       <p style="margin:0; font-size:22px; line-height:1.5;">
@@ -22,35 +22,37 @@
   }
 
   function setupPopupLogic() {
-    var popup = document.getElementById("popupBox");
-    var overlay = document.getElementById("popupOverlay");
-    var popupVisible = false;
+    var tryCount = 0;
+    var maxTries = 10;
 
-    function showPopup() {
-      if (!popupVisible) {
-        popup.style.display = "block";
-        overlay.style.display = "block";
-        popupVisible = true;
+    function attachHandlers() {
+      var popup = document.getElementById("popupBox");
+      var overlay = document.getElementById("popupOverlay");
+      var closeBtn = document.getElementById("closePopupBtn");
+      var subBtn = document.getElementById("subscribeBtn");
+
+      if (popup && overlay && closeBtn && subBtn) {
+        closeBtn.addEventListener("click", function () {
+          popup.style.display = "none";
+          overlay.style.display = "none";
+        });
+
+        subBtn.addEventListener("click", function () {
+          window.open("https://drive.google.com/file/d/1AUx2WTULXWvWtWXYasn4NmA__uRZWS2b/preview", "_blank");
+        });
+
+        document.addEventListener("mousemove", function triggerOnce() {
+          popup.style.display = "block";
+          overlay.style.display = "block";
+          document.removeEventListener("mousemove", triggerOnce);
+        });
+      } else if (tryCount < maxTries) {
+        tryCount++;
+        setTimeout(attachHandlers, 100); // retry after 100ms
       }
     }
 
-    function closePopup() {
-      popup.style.display = "none";
-      overlay.style.display = "none";
-      popupVisible = false;
-    }
-
-    function openPreview() {
-      window.open("https://drive.google.com/file/d/1AUx2WTULXWvWtWXYasn4NmA__uRZWS2b/preview", "_blank");
-    }
-
-    document.getElementById("closePopupBtn").addEventListener("click", closePopup);
-    document.getElementById("subscribeBtn").addEventListener("click", openPreview);
-
-    document.addEventListener("mousemove", function triggerOnce() {
-      showPopup();
-      document.removeEventListener("mousemove", triggerOnce);
-    });
+    attachHandlers();
   }
 
   document.addEventListener("DOMContentLoaded", function () {
